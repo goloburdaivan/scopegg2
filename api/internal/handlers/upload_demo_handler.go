@@ -2,9 +2,14 @@ package handlers
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/markus-wa/demoinfocs-golang/v5/pkg/demoinfocs"
 	"io"
+	"mime/multipart"
 	"net/http"
+	"path/filepath"
 	"scopegg2/internal/dto"
 )
 
@@ -27,6 +32,11 @@ func (h *UploadDemoHandler) Upload(c *gin.Context) {
 		return
 	}
 
+	if err := validateDemoFile(fileHeader); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	file, err := fileHeader.Open()
 	defer file.Close()
 
@@ -44,4 +54,33 @@ func (h *UploadDemoHandler) Upload(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
+}
+
+func validateDemoFile(fileHeader *multipart.FileHeader) error {
+	if filepath.Ext(fileHeader.Filename) != ".dem" {
+		return errors.New("only .dem files are allowed")
+	}
+
+	file, err := fileHeader.Open()
+	if err != nil {
+		return fmt.Errorf("cannot open file: %w", err)
+	}
+	defer file.Close()
+
+	pr, pw := io.Pipe()
+	tee := io.TeeReader(file, pw)
+
+	go func() {
+		_, _ = io.Copy(io.Discard, tee)
+		pw.Close()
+	}()
+
+	parser := demoinfocs.NewParser(pr)
+
+	_, err = parser.ParseNextFrame()
+	if err != nil && !errors.Is(err, io.EOF) {
+		return fmt.Errorf("file is not a valid CS2 demo: %w", err)
+	}
+
+	return nil
 }
