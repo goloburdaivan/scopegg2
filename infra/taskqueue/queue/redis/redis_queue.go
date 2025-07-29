@@ -2,7 +2,7 @@ package redis
 
 import (
 	"github.com/hibiken/asynq"
-	"scopegg2-shared/interfaces"
+	"scopegg2-infra/taskqueue/interfaces"
 )
 
 type redisTaskQueue struct {

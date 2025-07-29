@@ -4,10 +4,10 @@ import (
 	"context"
 	"io"
 	"log"
+	"scopegg2-infra/taskqueue/interfaces"
+	"scopegg2-shared/tasks"
 	"scopegg2/internal/dto"
 	"scopegg2/internal/handlers"
-	"scopegg2/internal/interfaces"
-	"scopegg2/internal/tasks"
 )
 
 type DemoUploader interface {

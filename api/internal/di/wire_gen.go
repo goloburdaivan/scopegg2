@@ -11,9 +11,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	config2 "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/hibiken/asynq"
+	"scopegg2-infra/taskqueue/queue/redis"
 	"scopegg2/internal/config"
 	"scopegg2/internal/handlers"
-	"scopegg2/internal/queue/redis"
 	"scopegg2/internal/server"
 	"scopegg2/internal/services"
 )

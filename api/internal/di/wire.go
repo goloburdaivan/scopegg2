@@ -9,9 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/google/wire"
 	"github.com/hibiken/asynq"
+	"scopegg2-infra/taskqueue/queue/redis"
 	config2 "scopegg2/internal/config"
 	"scopegg2/internal/handlers"
-	"scopegg2/internal/queue/redis"
 	server2 "scopegg2/internal/server"
 	services2 "scopegg2/internal/services"
 )
